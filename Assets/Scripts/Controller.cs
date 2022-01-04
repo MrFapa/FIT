@@ -2,12 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+
+enum Typ
 {
+    Player,
+    Enemy
+}
+public class Controller : MonoBehaviour
+{
+    [SerializeField]
+    private Typ typ;
+
     [SerializeField]
     private float maxForce;
     [SerializeField]
     private float maxSpeed;
+
     [SerializeField]
     private float maxVelocity;
 
@@ -20,20 +30,26 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        this.vel = new Vector3(0, 0, 0);
         sb = new SeekerBehaviour();
+
+        if (this.typ == Typ.Player){
+            this.vel = new Vector3(0, 0, 0);
+        }else if (this.typ == Typ.Enemy){
+            this.vel = new Vector3(0, 0, 0);
+        }
+        
     }
 
     void Update()
     {
-        this.target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        this.target.z = 0;
-
-
-        Debug.Log(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        if (this.typ == Typ.Player){
+            this.target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            this.target.z = 0;
+        }else if (this.typ == Typ.Enemy){
+            this.target = GameObject.Find("Player").GetComponent<Transform>().position;
+        }
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         this.vel = sb.calcSeekingVector(target, this.transform.position, vel, maxSpeed, maxForce, maxVelocity);
