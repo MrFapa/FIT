@@ -1,17 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
-
-enum Typ
-{
-    Player,
-    Enemy
-}
 public class Controller : MonoBehaviour
 {
     [SerializeField]
-    private Typ typ;
+    private Sprite enemySprite;
+
+    [SerializeField]
+    private Sprite playerSprite;
+
+    [SerializeField]
+    private Vector3 startPos;
 
     [SerializeField]
     private float maxForce;
@@ -26,26 +27,31 @@ public class Controller : MonoBehaviour
     private Vector3 vel;
 
     private SeekerBehaviour sb;
+
+    private float restartTime = 1f;
     
 
     void Start()
     {
         sb = new SeekerBehaviour();
+        this.gameObject.GetComponent<Transform>().position = startPos;
 
-        if (this.typ == Typ.Player){
+        if (this.gameObject.CompareTag("Player")){
             this.vel = new Vector3(0, 0, 0);
-        }else if (this.typ == Typ.Enemy){
+            this.GetComponent<SpriteRenderer>().sprite = playerSprite;
+        }else if (this.gameObject.CompareTag("Enemy")){
             this.vel = new Vector3(0, 0, 0);
+            this.GetComponent<SpriteRenderer>().sprite = enemySprite;
         }
         
     }
 
     void Update()
     {
-        if (this.typ == Typ.Player){
+        if (this.gameObject.CompareTag("Player")){
             this.target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             this.target.z = 0;
-        }else if (this.typ == Typ.Enemy){
+        }else if (this.gameObject.CompareTag("Enemy")){
             this.target = GameObject.Find("Player").GetComponent<Transform>().position;
         }
     }
@@ -61,9 +67,25 @@ public class Controller : MonoBehaviour
         this.transform.position += this.vel;
     }
 
+    void OnTriggerEnter2D (Collider2D other){
+        if (other.gameObject.CompareTag("Enemy") && this.gameObject.CompareTag("Player")){
+            this.GameOver();
+        }
+    }
+
+    void OnBecameInvisible()
+    {
+        if (this.gameObject.CompareTag("Player")){
+            this.GameOver();
+        }
+    }
+
+    void GameOver(){
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
     void edgeCheck()
     {
-        
-
+        //todo
     }
 }

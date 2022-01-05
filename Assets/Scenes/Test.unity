@@ -372,6 +372,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cube
       objectReference: {fileID: 0}
+    - target: {fileID: 7491403757194752736, guid: 3ed002ec01878ed4db4394dd93054273,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 7491403757194752747, guid: 3ed002ec01878ed4db4394dd93054273,
         type: 3}
       propertyPath: m_RootOrder
