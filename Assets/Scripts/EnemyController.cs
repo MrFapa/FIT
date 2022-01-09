@@ -46,6 +46,7 @@ public class EnemyController : MonoBehaviour
 
         if (Time.time - birthday > lifeTime)
         {
+            this.gameObject.GetComponent<EnemyIndicator>().clear();
             GameObject.Destroy(this.gameObject);
         }
     }

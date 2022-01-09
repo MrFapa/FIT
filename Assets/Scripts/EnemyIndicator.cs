@@ -18,6 +18,7 @@ public class EnemyIndicator : MonoBehaviour
     {
         this.indicator = Instantiate(indicator);
         this.indicatorRenderer = indicator.GetComponent<SpriteRenderer>();
+        this.indicatorRenderer.enabled = false;
     }
 
     // Update is called once per frame
@@ -32,12 +33,24 @@ public class EnemyIndicator : MonoBehaviour
             float xPos = Mathf.Clamp(screenCords.x, 0, Screen.width) * 0.9f + Screen.width * 0.05f;
             float yPos = Mathf.Clamp(screenCords.y, 0, Screen.height) * 0.9f + Screen.height * 0.05f;
 
-            Debug.Log(xPos + " : " + yPos);
-            Vector3 newPos = Camera.main.ScreenToWorldPoint(new Vector3(xPos, yPos, 0));
+            Vector3 newPos = Camera.main.ScreenToWorldPoint(new Vector3(xPos, yPos, screenCords.z));
 
             indicator.transform.position = newPos;
 
+            rotate();
         }
-        //indicatorRenderer.enabled = !visible;
+        indicatorRenderer.enabled = !visible;
+    }
+
+    void rotate()
+    {
+        Vector3 dir = this.transform.position.normalized;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
+
+        this.indicator.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+    }
+    public void clear()
+    {
+        Destroy(this.indicator);
     }
 }
